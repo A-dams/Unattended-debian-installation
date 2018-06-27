@@ -1,1 +1,85 @@
+### Fichier de preseed pour Debian 9
+
+# la langue et le pays de l'OS
+d-i debian-installer/locale string fr_FR.UTF-8
+
+# Choix du clavier
+# keymap est un alias de keyboard-configuration/xkb-keymap
+d-i keymap select fr(latin9)
+# On désactive la sélection fine de la configuration du clavier
+d-i keyboard-configuration/toggle select No toggling
+
+### Configuration Réseau
+# On désactive la configuration réseau
+d-i netcfg/enable boolean false
+
+# Mais on doit quand même configurer le nom de machine
+d-i netcfg/get_hostname string debianStretch
+# Ainsi que le domaine
+d-i netcfg/get_domain string example.com
+
+# Ici, on définit le nom local de la machine
+d-i netcfg/hostname string stretch
+
+### Mirror settings
+# Do not configure mirror repository
+#d-i apt-setup/no_mirror boolean true
+d-i mirror/country string manual
+d-i mirror/http/hostname string debian.proxad.net
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+
+# Pour préconfigurer le mot de passe de root en clair (à modifier après l'installation ^^)
+passwd	passwd/root-password password root
+passwd	passwd/root-password-again password root
+
+# On ne souhaite pas créer d'autres utilisateurs
+d-i passwd/make-user boolean false
+
+### Gestion de l'horloge
+# L'horloge matérielle fonctionne sur la zone UTC
+d-i clock-setup/utc boolean true
+
+# La zone utilisée par l'OS sera celle de Paris
+d-i time/zone string Europe/Paris
+
+# On désactive l'utilisation de NTP pour configurer l'heure
+d-i clock-setup/ntp boolean false
+
+### Partitioning
+# Nous voulons une table de partition au format GPT
+d-i partman-basicfilesystems/choose_label string gpt
+d-i partman-basicfilesystems/default_label string gpt
+d-i partman-partitioning/choose_label string gpt
+d-i partman-partitioning/default_label string gpt
+d-i partman/choose_label string gpt
+d-i partman/default_label string gpt
+partman-partitioning partman-partitioning/choose_label select gpt
+
+# Seul le premier disque est partionné
+d-i partman-auto/disk string /dev/sda
+# On partionne en "normal": pas de RAID ni de LVM
+d-i partman-auto/method string regular
+# Pour être sûr, on supprime une éventuelle configuration LVM
+d-i partman-lvm/device_remove_lvm boolean true
+# Même chose pour le RAID
+d-i partman-md/device_remove_md boolean true
+# Chaînes pour ne pas toucher la configuration LVM (donc pas de configuration)
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+
+# L'installation sera simple: on fout tout dans une seule partition
+d-i partman-auto/choose_recipe select atomic
+
+
+
+
+
+
+
+
+
+
+
+
 
