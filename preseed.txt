@@ -1,1 +1,27 @@
+#Création de quatres partitions 
+d-i partman-auto/expert_recipe string                         \
+      boot-root ::                                            \
+              10240 10240 10240 ext4                          \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+              .                                               \
+                 2048 2048 2048 ext4                          \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /tmp }                     \
+              .                                               \
+                 4096 4096 4096 ext4                          \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /var/log }                  \
+              .                                               \
+              1024 1024 1024 ext4                             \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /home }                      \
+              .
+              #200% 16000 16000 linux-swap                     \
+               #       method{ swap } format{ }                \
+              #.
 
