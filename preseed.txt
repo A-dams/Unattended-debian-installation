@@ -28,5 +28,31 @@ d-i partman-auto/expert_recipe string                         \
 # secteur d'amorçage principal s'il n'existe aucun autre système d'exploitation sur la machine.
 d-i grub-installer/only_debian boolean true
 
-# Pour éviter le dernier message disant que l'installation est terminée.
-d-i prebaseconfig/reboot_in_progress note
+### Gestion de l'horloge
+# L'horloge matérielle fonctionne sur la zone UTC
+d-i clock-setup/utc boolean true
+# La zone utilisée par l'OS 
+d-i time/zone string Europe/Paris
+
+### Gestion des comptes.
+
+# Pour préconfigurer le mot de passe de root.
+passwd	passwd/root-password password root
+passwd	passwd/root-password-again password root
+
+# Si vous voulez ne pas créer d'utilisateur :
+#passwd	passwd/make-user boolean false
+
+# Vous pouvez aussi présélectionner le nom de l'utilisateur et son identifiant de connexion.
+passwd	passwd/user-fullname string user
+passwd	passwd/username string user
+
+# Et le mot de passe.
+#passwd	passwd/user-password password user
+#passwd	passwd/user-password-again password user
+
+
+
+
+
+
