@@ -48,8 +48,8 @@ passwd	passwd/user-fullname string user
 passwd	passwd/username string user
 
 # Et le mot de passe.
-#passwd	passwd/user-password password user
-#passwd	passwd/user-password-again password user
+passwd	passwd/user-password password user
+passwd	passwd/user-password-again password user
 
 
 
