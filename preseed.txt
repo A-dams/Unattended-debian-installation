@@ -25,3 +25,8 @@ d-i partman-auto/expert_recipe string                         \
                #       method{ swap } format{ }                \
               #.
 
+# secteur d'amorçage principal s'il n'existe aucun autre système d'exploitation sur la machine.
+d-i grub-installer/only_debian boolean true
+
+# Pour éviter le dernier message disant que l'installation est terminée.
+d-i prebaseconfig/reboot_in_progress note
