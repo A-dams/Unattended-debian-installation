@@ -1,43 +1,28 @@
+dest=/toast
+iso=debian-9.4.0-i386-netinst.iso
 isoStock=/home/isofiles
 dirIso=/home
-iso=debian-9.4.0-i386-netinst.iso
-preseedFile=preseed.cfg
-preseedDir=/home/$preseedFile
 
+#Mount and copy iso fil
 
-#Mount and copy the iso on a file
+mount $dirIso/$iso $isoStock/stock
+cp -a $isoStock/stock $isoStock/isoCp/stock
+umount $isoStock/stock
 
-rm -rf $isoStock
+#Change initrd
 
-#Mount part
-
-mkdir -p $isoStock/loop
-mount -o nouuid $dirIso/$iso $isoStock/loop
-
-if [ "$?" -eq 0 ]; then
-  echo "Coudn't mount iso on loop directory";
-  exit 1;
-fi
-
-#Copy part
-
-mkdir -p $isoStock/isoCp
-rsync -a -H --exclude=TRANS.TBL $isoStock/loop $isoStock/isoCp
-umount $isoStock/loop
-
-#Initrd
-
-mkdir -p $isoStock/irmod
-cd $isoStock/irmod
-gzip -d < $isoStock/isoCp/install.386/initrd.gz | cpio --extract --make-directories --no-absolute-filenames
-cp $preseedDir $isoStock/irmod/$preseedFile
-find . | cpio -H newc --create | gzip -9 > $isoStock/isoCp/install.386/initrd.gz
+chmod +w -R $isoStock/isoCp/stock/install.386/
+gunzip $isoStock/isoCp/stock/install.386/initrd.gz
+echo preseed.cfg | cpio -H newc -o -A -F $isoStock/isoCp/stock/install.386/initrd
+gzip $isoStock/isoCp/stock/install.386/initrd
+chmod -w -R $isoStock/isoCp/stock/install.386/
 
 #Fix md5sum
 
-md5sum `find $isoStock/isoCp/ -follow -type f` > $isoStock/isoCp/md5sum.txt
+cd $isoStock/isoCp/stock
+md5sum `find -follow -type f` > md5sum.txt
+cd ../../
 
-#Create iso
+#Creating Iso
 
-genisoimage -o $preseedDir -r -J -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf-8 isolinux/isolinux.bin -c isolinux/boot.cat $isoStock/isoCp/
-
+genisoimage -r -J -b $isoStock/isoCp/stock/isolinux/isolinux.bin -c $isoStock/isoCp/stockisolinux/boot.cat -no-emul-boot -load-size 4 -boot-info-table -o -preseed-$iso $isoStock
