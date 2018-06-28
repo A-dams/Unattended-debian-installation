@@ -1,3 +1,27 @@
+# la langue et le pays de l'OS
+d-i debian-installer/locale string fr_FR.UTF-8
+
+# Choix du clavier
+# keymap est un alias de keyboard-configuration/xkb-keymap
+d-i keymap select fr(latin9)
+# On désactive la sélection fine de la configuration du clavier
+d-i keyboard-configuration/toggle select No toggling
+
+###Réseau
+#Pour qu'on puisse faire le dhcp
+d-i netcfg/dhcp_failed note
+d-i netcfg/dhcp_options select Configure network manually
+
+#Configuration statique
+d-i netcfg/get_ipaddress string 192.168.43.2
+d-i netcfg/get_netmask string 255.255.255.0
+d-i netcfg/get_gateway string 192.168.43.1
+d-i netcfg/get_nameservers string 192.168.43.1
+d-i netcfg/confirm_static boolean true
+
+# Disable that annoying WEP key dialog.
+d-i netcfg/wireless_wep string
+
 #Création de quatres partitions 
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
@@ -33,8 +57,19 @@ d-i grub-installer/only_debian boolean true
 d-i clock-setup/utc boolean true
 # La zone utilisée par l'OS 
 d-i time/zone string Europe/Paris
+### Configuration Réseau
+# On désactive la configuration réseau
+d-i netcfg/enable boolean false
 
 ### Gestion des comptes.
+
+On doit configure le nom de machine
+d-i netcfg/get_hostname string neurones
+# Ainsi que le domaine
+d-i netcfg/get_domain string neurones.com
+
+# Ici, on définit le nom local de la machine
+d-i netcfg/hostname string stretch
 
 # Pour préconfigurer le mot de passe de root.
 passwd	passwd/root-password password root
@@ -50,6 +85,54 @@ passwd	passwd/username string user
 # Et le mot de passe.
 passwd	passwd/user-password password user
 passwd	passwd/user-password-again password user
+
+### Configuration d'Apt..
+
+# Cette question contrôle la source des paquets qui sera utilisée dans la
+# deuxième étape de l'installation. Les choix sont cdrom, http, ftp, 
+# filesystem, modifier soi-même le fichier sources list.
+base-config apt-setup/uri_type select http
+
+# Si vous choisissez ftp ou http, on vous demandera un pays et un miroir.
+base-config apt-setup/country select enter information manually
+base-config apt-setup/hostname string http.us.debian.org
+#base-config apt-setup/hostname string https://repository.neuronesit.fr/repository/debian/
+base-config apt-setup/directory string /debian
+# Ne faire le choix que d'un miroir.
+base-config apt-setup/another boolean false
+
+# Vous pouvez choisir d'installer des paquets de non-free et contrib.
+#base-config apt-setup/non-free boolean true
+#base-config apt-setup/contrib boolean true
+
+# Pour autoriser les mises à jour de sécurité.
+base-config apt-setup/security-updates boolean true
+
+# Il est recommandé de toujours inclure la tâche Système standard
+tasksel tasksel/first multiselect Desktop environment, Standard system
+#tasksel tasksel/first multiselect Web server, Standard system
+
+# fstab utilisera des UUID plutôt que des noms de périphériques
+d-i partman/mount_style select uuid
+
+# Pas d'éjection du média d'installation (bien pour faire des tests sur une VM)
+d-i cdrom-detect/eject boolean true
+
+# Désactivation du message indiquant que l'installation est terminée.
+d-i finish-install/reboot_in_progress note
+
+# Une fois l'installation terminée, on éteint la machine
+d-i debian-installer/exit/poweroff boolean true
+
+
+
+
+
+
+
+
+
+
 
 
 
