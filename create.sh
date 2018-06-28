@@ -26,3 +26,4 @@ cd ../../
 #Creating Iso
 
 genisoimage -r -J -b $isoStock/isoCp/stock/isolinux/isolinux.bin -c $isoStock/isoCp/stockisolinux/boot.cat -no-emul-boot -load-size 4 -boot-info-table -o -preseed-$iso $isoStock
+
