@@ -1,4 +1,3 @@
-dest=/toast
 iso=debian-9.4.0-i386-netinst.iso
 isoStock=/home/isofiles
 dirIso=/home
