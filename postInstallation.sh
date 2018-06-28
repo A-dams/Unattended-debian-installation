@@ -24,4 +24,5 @@ apt -y install $liste
 
 echo -e "\n FIN."
 
-#apt-setup/repository string https://repository.neuronesit.fr/repository/debian/
+#repo sources pour apt
+wget -P /etc/apt/ https://repository.neuronesit.fr/repository/debian/
